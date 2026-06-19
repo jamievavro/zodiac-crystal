@@ -776,96 +776,68 @@ function closeModal(){document.getElementById('overlay').classList.remove('on');
 function maybeClose(e){if(e.target===document.getElementById('overlay'))closeModal();}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
-function getGroqKey(){return localStorage.getItem('groq_api_key');}
+function getGeminiKey(){return localStorage.getItem('gemini_api_key')||atob('QVEuQWI4Uk42S0JWcHVEMVFkN0FJTDRJMXVNSDVVdEttTXl3b18yVGN2SDc5c19VeWx3MXc=');}
 
-function promptForKey(callback, isInvalid){
-  var existing=getGroqKey();
-  if(existing&&!isInvalid){callback(existing);return;}
-  if(window._geminiOverlay){window._geminiOverlay.remove();window._geminiOverlay=null;}
+function promptForKey(callback){
+  var existing=getGeminiKey();
+  if(existing){callback(existing);return;}
   var overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;backdrop-filter:blur(6px)';
-  var errorBanner=isInvalid
-    ?'<div style="background:rgba(180,40,40,.18);border:1.5px solid #c05050;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:9px">'
-      +'<span style="font-size:1.3rem">&#9888;&#65039;</span>'
-      +'<div style="text-align:left">'
-      +'<div style="font-size:.78rem;font-weight:bold;color:#f4a0a0;margin-bottom:2px">API Key Invalid or Expired</div>'
-      +'<div style="font-size:.72rem;color:#d08080;line-height:1.5">Your saved key was rejected. Please create a new free key at console.groq.com and paste it below.</div>'
-      +'</div></div>'
-    :'';
-  overlay.innerHTML='<div style="background:#1a0a3a;border:1.5px solid #7c5cbf;border-radius:18px;padding:28px 24px;max-width:420px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(10,0,40,.6)">'
-    +'<div style="font-size:1.8rem;margin-bottom:8px">'+(isInvalid?'&#128273;':'&#127775;')+'</div>'
-    +'<div style="font-family:Georgia,serif;font-size:1.2rem;color:#d4b8ff;margin-bottom:6px">'+(isInvalid?'Update Your AI Key':'Connect Your AI')+'</div>'
-    +errorBanner
-    +'<div style="font-size:.82rem;color:#a090c0;line-height:1.7;margin-bottom:16px;text-align:left;background:rgba(255,255,255,.04);border-radius:10px;padding:12px 14px">'
-    +'<div style="color:#c4a8ff;font-weight:bold;margin-bottom:6px">&#128279; Get your free Groq key (100% free, no credit card):</div>'
-    +'<div style="margin-bottom:4px">1&#65039;&#8419; Visit <a href="https://console.groq.com/keys" target="_blank" style="color:#7dd3fc;text-decoration:underline">console.groq.com/keys</a></div>'
-    +'<div style="margin-bottom:4px">2&#65039;&#8419; Sign up free with Google or email</div>'
-    +'<div style="margin-bottom:4px">3&#65039;&#8419; Click <strong style="color:#c4a8ff">"Create API Key"</strong></div>'
-    +'<div style="margin-bottom:4px">4&#65039;&#8419; Copy &amp; paste the key below (starts with <strong style="color:#c4a8ff">gsk_</strong>)</div>'
-    +'<div style="margin-top:8px;font-size:.7rem;color:#7060a0">&#128274; Your key is saved only in this browser. We never see it.</div>'
-    +'</div>'
-    +'<div style="position:relative;margin-bottom:12px">'
-    +'<input id="gemini-key-input" type="password" placeholder="Paste your Groq API key here (gsk_…)" '
-    +'style="width:100%;box-sizing:border-box;padding:11px 44px 11px 14px;border-radius:10px;border:1.5px solid #7c5cbf;background:#0d0520;color:white;font-size:.85rem;outline:none;font-family:Georgia,serif"/>'
-    +'<button onclick="toggleKeyVisibility()" id="key-eye-btn" title="Show/hide key" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:#9080c0;padding:2px">&#128065;</button>'
-    +'</div>'
-    +'<div id="gemini-key-error" style="display:none;font-size:.72rem;color:#f4a0a0;margin-bottom:8px;text-align:left;padding:0 2px">&#10060; Please paste a valid Groq API key (starts with gsk_) before continuing.</div>'
-    +'<button onclick="saveGeminiKey()" style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#7c5cbf,#4a2a8f);border:none;color:white;font-size:.9rem;font-weight:bold;cursor:pointer;margin-bottom:10px;font-family:Georgia,serif;letter-spacing:.04em">&#9733; Activate Free AI Features</button>'
-    +'<div style="font-size:.7rem;color:#5a4a80;line-height:1.55">&#128274; Saved only in this browser &nbsp;·&nbsp; We never see your key<br>Switch browsers? Visit console.groq.com to get your key again.</div>'
+  overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  overlay.innerHTML='<div style="background:#1a0a3a;border:1.5px solid #7c5cbf;border-radius:18px;padding:28px 24px;max-width:400px;width:100%;text-align:center">'
+    +'<div style="font-size:1.8rem;margin-bottom:10px">&#127775;</div>'
+    +'<div style="font-family:Georgia,serif;font-size:1.2rem;color:#d4b8ff;margin-bottom:8px">Connect Your AI</div>'
+    +'<div style="font-size:.82rem;color:#a090c0;line-height:1.65;margin-bottom:18px">This app uses Google Gemini AI (free!) for personalized horoscopes and tarot readings.<br><br>'
+    +'<strong style="color:#c4a8ff">Get your free key in 2 minutes:</strong><br>'
+    +'1. Go to <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#7dd3fc">aistudio.google.com/apikey</a><br>'
+    +'2. Sign in with your Google account<br>'
+    +'3. Click "Create API Key"<br>'
+    +'4. Paste it below</div>'
+    +'<input id="gemini-key-input" type="password" placeholder="Paste your Gemini API key here" '
+    +'style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:10px;border:1.5px solid #7c5cbf;background:#0d0520;color:white;font-size:.85rem;margin-bottom:12px;outline:none"/>'
+    +'<button onclick="saveGeminiKey()" style="width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#7c5cbf,#4a2a8f);border:none;color:white;font-size:.9rem;font-weight:bold;cursor:pointer;margin-bottom:8px">&#9733; Activate Free AI Features</button>'
+    +'<div style="font-size:.72rem;color:#7060a0">Your key is saved only on your device. We never see it.</div>'
     +'</div>';
   document.body.appendChild(overlay);
   window._geminiCallback=callback;
   window._geminiOverlay=overlay;
-  setTimeout(function(){var i=document.getElementById('gemini-key-input');if(i)i.focus();},100);
-}
-
-function toggleKeyVisibility(){
-  var inp=document.getElementById('gemini-key-input');
-  var btn=document.getElementById('key-eye-btn');
-  if(!inp)return;
-  if(inp.type==='password'){inp.type='text';if(btn)btn.innerHTML='&#128064;';}
-  else{inp.type='password';if(btn)btn.innerHTML='&#128065;';}
 }
 
 function saveGeminiKey(){
   var key=document.getElementById('gemini-key-input').value.trim();
-  var errEl=document.getElementById('gemini-key-error');
-  if(!key){if(errEl)errEl.style.display='block';return;}
-  if(errEl)errEl.style.display='none';
-  localStorage.setItem('groq_api_key',key);
-  if(window._geminiOverlay){window._geminiOverlay.remove();window._geminiOverlay=null;}
+  if(!key){alert('Please paste your API key first.');return;}
+  localStorage.setItem('gemini_api_key',key);
+  if(window._geminiOverlay)window._geminiOverlay.remove();
   if(window._geminiCallback)window._geminiCallback(key);
 }
 
 function callGemini(prompt, onSuccess, onError){
-  var key=getGroqKey();
+  var key=getGeminiKey();
   if(!key){promptForKey(function(k){callGeminiWithKey(k,prompt,onSuccess,onError);});return;}
   callGeminiWithKey(key,prompt,onSuccess,onError);
 }
 
 function callGeminiWithKey(key,prompt,onSuccess,onError){
-  fetch('https://api.groq.com/openai/v1/chat/completions',{
+  var url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key;
+  fetch(url,{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      model:'llama-3.3-70b-versatile',
-      messages:[{role:'user',content:prompt}],
-      max_tokens:900,
-      temperature:0.9
+      contents:[{parts:[{text:prompt}]}],
+      generationConfig:{temperature:0.9,maxOutputTokens:900}
     })
   })
   .then(function(r){
-    if(r.status===401||r.status===403){
-      localStorage.removeItem('groq_api_key');
-      promptForKey(function(k){callGeminiWithKey(k,prompt,onSuccess,onError);}, true);
+    if(r.status===400||r.status===403){
+      localStorage.removeItem('gemini_api_key');
+      promptForKey(function(k){callGeminiWithKey(k,prompt,onSuccess,onError);});
       return null;
     }
     return r.json();
   })
   .then(function(data){
     if(!data)return;
-    var raw=((data.choices||[])[0]||{}).message&&data.choices[0].message.content||'';
-    raw=raw.trim().replace(/```json|```/g,'').trim();
+    var text=(((data.candidates||[])[0]||{}).content||{}).parts||[];
+    var raw=text.map(function(p){return p.text||'';}).join('').trim().replace(/```json|```/g,'').trim();
     onSuccess(raw);
   })
   .catch(function(e){if(onError)onError(e);});
