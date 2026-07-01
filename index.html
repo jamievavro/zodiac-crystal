@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DT1K3FPCSJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DT1K3FPCSJ');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Zodiac Crystal Guide</title>
@@ -215,7 +223,11 @@ body{font-family:Georgia,serif;background:#fdf8f0;color:#3a2a10;min-height:100vh
   <h1>&#10024; Zodiac Crystal Guide</h1>
   <p>12 Signs &#8226; 36 Healing Crystals &#8226; Tarot Readings</p>
 </div>
-<div style="position:absolute;top:12px;right:14px;z-index:100">
+<div style="position:absolute;top:12px;right:14px;z-index:100;display:flex;gap:8px">
+  <button onclick="openDonateModal()" title="Support this app"
+    style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:14px;color:white;display:flex;align-items:center;justify-content:center">
+    &#128150;
+  </button>
   <button onclick="promptForKey(function(){})" title="Change Gemini API Key"
     style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:14px;color:white;display:flex;align-items:center;justify-content:center">
     &#9881;&#65039;
@@ -774,6 +786,21 @@ function stab(t){
 
 function closeModal(){document.getElementById('overlay').classList.remove('on');document.body.style.overflow='';}
 function maybeClose(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function openDonateModal(){
+  document.getElementById('modal').innerHTML=
+    '<div class="modal-banner el-water" style="color:white">'
+    +'<button class="xbtn" onclick="closeModal()">&#x2715;</button>'
+    +'<div style="font-size:2.5rem">&#128150;</div>'
+    +'<div class="modal-title">Support This App</div>'
+    +'<div class="modal-dates">If it brought you a little magic, consider a tip</div>'
+    +'</div>'
+    +'<div class="modal-body">'
+    +'<a href="https://cash.app/$jamiekvavro" target="_blank" rel="noopener" style="display:block;text-align:center;padding:16px;border-radius:14px;background:linear-gradient(135deg,#00c244,#00d64f);color:white;text-decoration:none;font-weight:bold;letter-spacing:.05em;font-size:1rem">&#128176; Cash App &#8226; $jamiekvavro</a>'
+    +'<p style="text-align:center;font-size:.78rem;color:#9080a0;margin-top:16px;line-height:1.6">Every bit helps keep the crystals sparkling and the cards turning &#10024;</p>'
+    +'</div>';
+  document.getElementById('overlay').classList.add('on');
+  document.body.style.overflow='hidden';
+}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
 function getGroqKey(){return localStorage.getItem('groq_api_key');}
